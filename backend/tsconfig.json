@@ -1,15 +1,22 @@
 {
   "compilerOptions": {
-    "target": "es6",
-    "module": "commonjs", //通过commonjs处理模块化
-    "rootDir": "./",
-    "outDir": "./build",
+    "module": "commonjs",
+    "declaration": true,
+    "removeComments": true,
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
+    "allowSyntheticDefaultImports": true,
     "esModuleInterop": true,
-    // "baseUrl": "src",
-    "strict": true,
-    "strictPropertyInitialization": false // 不用严格要求值的初始化
-  },
-  "exclude": [
-    "node_modules"
-  ]
+    "target": "es2017",
+    "sourceMap": true,
+    "outDir": "./dist",
+    "baseUrl": "./",
+    "incremental": true,
+    "skipLibCheck": true,
+    "strictNullChecks": false,
+    "noImplicitAny": false,
+    "strictBindCallApply": false,
+    "forceConsistentCasingInFileNames": false,
+    "noFallthroughCasesInSwitch": false
+  }
 }
