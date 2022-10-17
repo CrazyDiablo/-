@@ -15,7 +15,7 @@ const getHouseFromElement = (houseElement: cheerio.Element) => {
     // 房子居室数量
     const roomNum = Number(roomText.trim().split(/\s+/)[0].replace(/[^0-9]/ig, ''))
     // 房子面积 单位 ㎡
-    const size = Number(roomText.trim().split(/\s+/)[1])
+    const size = Number(roomText.trim().split(/\s+/)[1].replace(/[^0-9]/ig, ''))
     // 房子价格 单位 元
     const price = e('.money .strongbox').text()
     // 房子地址
@@ -52,7 +52,7 @@ const getHouseListFromPage = (url: string): House[] => {
         throw new Error('触发反爬啦')
     }
 
-    const houseElementList = e('.house-list li')
+    const houseElementList = e('.house-list .house-cell')
     houseElementList.each((index, houseElement) => {
         const house: House = getHouseFromElement(houseElement)
         houseList.push(house)
@@ -85,7 +85,7 @@ const getPage = (url: string): string => {
     return body
 }
 
-export const spider58 = (pageStart: number = 2, pageEnd: number = 11) => {
+export const spider58 = (pageStart: number = 2, pageEnd: number = 3) => {
     console.log('58租房 抓取开始')
     let houseList: House[] = []
     for (let i = pageStart; i < pageEnd; i++) {
@@ -96,3 +96,5 @@ export const spider58 = (pageStart: number = 2, pageEnd: number = 11) => {
     }
     return houseList
 }
+
+spider58()
