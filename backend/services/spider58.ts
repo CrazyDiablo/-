@@ -80,7 +80,6 @@ const getPage = (url: string): string => {
             }
         })
         body = res.getBody('utf8')
-
         fs.writeFileSync(path, body)
     }
     return body
