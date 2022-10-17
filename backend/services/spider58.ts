@@ -1,12 +1,70 @@
 import fs from 'fs'
 import cheerio from 'cheerio'
 import request from 'sync-request'
-import { error } from 'console'
+import { House } from '../interface'
 
-const getHtmlBody = (url: string): string => {
+// XXX  爬虫属于什么？service或者modal? 该放在哪里？是否需要面向对象式写法？
+
+const getHouseFromElement = (houseElement: cheerio.Element) => {
+    const e = cheerio.load(houseElement)
+    // 房子标题
+    const title = e('.des h2 a').text().trim()
+    // 房子居室
+    const roomText = e('.room').text()
+    const room = e('.room').text().trim().split(/\s+/)[0]
+    // 房子居室数量
+    const roomNum = Number(roomText.trim().split(/\s+/)[0].replace(/[^0-9]/ig, ''))
+    // 房子面积 单位 ㎡
+    const size = Number(roomText.trim().split(/\s+/)[1])
+    // 房子价格 单位 元
+    const price = e('.money .strongbox').text()
+    // 房子地址
+    const address = (e('.infor').text()).replace(/\ +/g, '').replace(/[\r\n]/g, '').split('距')[0]
+    // 房子高德地图坐标 TODO 拆出去
+    const urlAMap = encodeURI(`https://restapi.amap.com/v3/geocode/geo?address=${address}&output=JSON&key=26e4233fff29cfb5b7a9fd52409ff407&city=苏州`)
+    const body = request('GET', urlAMap).getBody('utf8')
+    const geocodes = JSON.parse(body).geocodes || []
+    const location = geocodes[0]
+        ? [
+            Number(geocodes[0]?.location.split(',')[0]),
+            Number(geocodes[0]?.location.split(',')[1]),
+        ]
+        : [0, 0]
+    const house: House = {
+        title,
+        room,
+        roomNum,
+        size,
+        price,
+        address,
+        location,
+    }
+    return house
+}
+
+const getHouseListFromPage = (url: string): House[] => {
+    const houseList: House[] = []
+    const page = getPage(url)
+    let e = cheerio.load(page)
+    // 触发反爬登录页面时停止爬虫
+    const loginBtnText = e('#btnSubmit').attr()?.value
+    if (loginBtnText) {
+        throw new Error('触发反爬啦')
+    }
+
+    const houseElementList = e('.house-list li')
+    houseElementList.each((index, houseElement) => {
+        const house: House = getHouseFromElement(houseElement)
+        houseList.push(house)
+    })
+
+    return houseList
+}
+
+const getPage = (url: string): string => {
     let body: string
-    // const path = 'cached_html' + '/' + url.split('pn')[1][0] + '.html'
-    const path = 'cached_html' + '/' + 'test' + '.html'
+    const path = 'cached_html' + '/' + url.split('pn')[1][0] + '.html'
+    // const path = 'cached_html' + '/' + 'test' + '.html'
     const isExsists = fs.existsSync(path)
     // 如果链接路径已存在就返回缓存的页面，否则就先请求和缓存页面后再返回页面
     if (isExsists) {
@@ -28,26 +86,14 @@ const getHtmlBody = (url: string): string => {
     return body
 }
 
-
-
-const spider58 = () => {
-    let initUrl = `https://su.58.com/chuzu/pn${2}/`
-
-    const body = getHtmlBody(initUrl)
-    let e = cheerio.load(body)
-    // 触发反爬登录页面时停止爬虫
-    const loginBtnText = e('#btnSubmit').attr()?.value
-    if (loginBtnText) {
-        throw new Error('触发反爬啦')
+export const spider58 = (pageStart: number = 2, pageEnd: number = 11) => {
+    console.log('58租房 抓取开始')
+    let houseList: House[] = []
+    for (let i = pageStart; i < pageEnd; i++) {
+        console.log('page', i)
+        const url = `https://su.58.com/chuzu/pn${i}/`
+        const _houseList: House[] = getHouseListFromPage(url)
+        houseList = [...houseList, ..._houseList]
     }
-
-    const houseList = e('.house-list li')
-    houseList.each((index, element) => {
-        if (index === 0) {
-            const e = cheerio.load(element)
-            console.log('room', e('.room').text())
-        }
-    })
+    return houseList
 }
-
-spider58()

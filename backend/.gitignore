@@ -9,6 +9,10 @@ lerna-debug.log*
 
 node_modules
 backend/node_modules
+db/*
+!db/.gitkeep
+cached_html/*
+!cached_html/.gitkeep
 dist
 build
 dist-ssr
