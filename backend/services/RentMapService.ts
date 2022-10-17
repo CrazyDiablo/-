@@ -15,6 +15,11 @@ class RentMapService {
 
         return new Date()
     }
+
+    public getRentList() {
+        let filePath = 'db/house.json'
+        return fs.readFileSync(filePath, 'utf8')
+    }
 }
 
 export default RentMapService
