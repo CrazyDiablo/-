@@ -7,7 +7,7 @@ class RentMapController {
 
     public getRentList(req: Request, res: Response, next: NextFunction) {
         const result = service.getRentList()
-        res.status(200).send({ message: 'success', status: true, content: result })
+        res.status(200).send({ message: 'success', status: true, content: JSON.parse(result) })
     }
 
     public update(req: Request, res: Response, next: NextFunction) {

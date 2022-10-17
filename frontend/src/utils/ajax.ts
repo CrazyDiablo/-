@@ -14,23 +14,11 @@ const _ajax = (method, url, data, headers, callback, async = true) => {
 }
 
 class Ajax {
-    constructor(baseUrl) {
-        this.baseUrl = baseUrl || ''
-    }
 
-    corsGet(path, callback, async = true) {
+    get(url, callback) {
         let method = 'GET'
-        let url = this.baseUrl + path
-        let data = {}
-        let headers = {
-            'Content-Type': 'application/json',
-        }
-        _ajax(method, url, data, headers, callback, async)
-    }
-
-    get(path, callback) {
-        let method = 'GET'
-        let url = this.baseUrl + path
+        console.log('this.baseUrl', this.baseUrl)
+        console.log('url', url)
         let headers = {
             'Content-Type': 'application/json',
         }
@@ -40,8 +28,7 @@ class Ajax {
         })
     }
 
-    post(path, data, callback) {
-        let url = this.baseUrl + path
+    post(url, data, callback) {
         let headers = {
             'Content-Type': 'application/json',
         }

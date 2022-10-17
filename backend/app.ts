@@ -2,6 +2,7 @@ import express, { Router } from 'express'
 import path from 'path'
 const logger = require('morgan')
 var cookieParser = require('cookie-parser')
+const cors = require('cors')
 
 class App {
     app: express.Application
@@ -22,6 +23,9 @@ class App {
         this.app.use(cookieParser())    // 解析cookie
         // 配置日志系统
         this.app.use(logger('dev'))
+        //解决跨域
+        this.app.use(cors());
+        this.app.options('*', cors())
     }
 
     // 注册路由

@@ -1,7 +1,7 @@
-import Ajax from '@Utils/ajax'
+import Ajax from '@u/ajax'
 
-let ajax = new Ajax()
-let baseUrl = 'http://127.0.0.1:80/api/'
+let baseUrl = 'http://127.0.0.1:4090/'
+let ajax = new Ajax('baseUrl')
 
 const createAPI = (name, options) => {
     const result = {}
