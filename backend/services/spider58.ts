@@ -96,5 +96,3 @@ export const spider58 = (pageStart: number = 2, pageEnd: number = 3) => {
     }
     return houseList
 }
-
-spider58()
