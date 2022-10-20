@@ -102,7 +102,7 @@ const RentMap: FC = (): ReactElement => {
         <span>${clickMassData.address}</span>
         <span class='price'>${clickMassData.price}元</span>
         </div>
-        <div>详情：<a href="">点击跳转58详情页面</a></div>
+        <div>详情：<a href=${clickMassData.detailLink}>点击跳转58详情页面</a></div>
     </div>
 </div>`
     //     const html = `<div cla>

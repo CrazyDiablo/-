@@ -10,6 +10,9 @@ const getHouseFromElement = (houseElement: cheerio.Element) => {
     const e = cheerio.load(houseElement)
     // 房子标题
     const title = e('.des h2 a').text().trim()
+    // 房子详情58跳转链接
+    const detailLink = e('.des h2 a').attr('href')
+    console.log('detailLink', detailLink)
     // 房子居室
     const roomText = e('.room').text()
     const room = e('.room').text().trim().split(/\s+/)[0]
@@ -33,6 +36,7 @@ const getHouseFromElement = (houseElement: cheerio.Element) => {
         : [0, 0]
     const house: House = {
         title,
+        detailLink,
         room,
         roomNum,
         size,
