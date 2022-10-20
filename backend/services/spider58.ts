@@ -6,20 +6,20 @@ import { sleep } from '../utils/util'
 
 // XXX  爬虫属于什么？service或者modal? 该放在哪里？是否需要面向对象式写法？
 
+
 const getHouseFromElement = (houseElement: cheerio.Element) => {
     const e = cheerio.load(houseElement)
     // 房子标题
     const title = e('.des h2 a').text().trim()
     // 房子详情58跳转链接
     const detailLink = e('.des h2 a').attr('href')
-    console.log('detailLink', detailLink)
     // 房子居室
     const roomText = e('.room').text()
     const room = e('.room').text().trim().split(/\s+/)[0]
     // 房子居室数量
     const roomNum = Number(roomText.trim().split(/\s+/)[0].replace(/[^0-9]/ig, ''))
     // 房子面积 单位 ㎡
-    const size = Number(roomText.trim().split(/\s+/)[1].replace(/[^0-9]/ig, ''))
+    const size = Number(roomText.trim().split(/\s+/)[1].replace(/[^0-9.-]/g, ''))
     // 房子价格 单位 元
     const price = Number(e('.money .strongbox').text())
     // 房子地址
