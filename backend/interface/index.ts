@@ -3,7 +3,7 @@ export interface House {
     room: string;
     size: number;
     roomNum: number;
-    price: string;
+    price: number;
     address: string;
     location: number[];
 }
