@@ -1,3 +1,5 @@
+// TODO typescript重构
+
 const _ajax = (method, url, data, headers, callback, async = true) => {
     let r = new XMLHttpRequest()
     r.open(method, url, async)

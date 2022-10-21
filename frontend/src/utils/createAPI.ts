@@ -3,6 +3,7 @@ import Ajax from '@u/ajax'
 let baseUrl = 'http://127.0.0.1:4090/'
 let ajax = new Ajax()
 
+// TODO typescript重构
 const createAPI = (name, options) => {
     const result = {}
     for (let key in options) {
