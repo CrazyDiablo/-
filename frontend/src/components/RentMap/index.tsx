@@ -42,7 +42,6 @@ const style = [
     },
 ]
 
-
 const RentMap: FC = (): ReactElement => {
     const [massDataList, setmMssDataList] = useState<AMap.MassMarks.MassData[]>([])
     const [position, setPosition] = useState<AMap.ExpandPosition>({ longitude: 0, latitude: 0 })
@@ -78,7 +77,6 @@ const RentMap: FC = (): ReactElement => {
     // 信息弹窗事件
     const infoWindowEvents: InfoWindowProps['events'] = {
         open: (e) => {
-            console.log('infoWindowEvents', e)
             setInfoWindowVisible(true);
         },
         close: () => {
@@ -86,9 +84,7 @@ const RentMap: FC = (): ReactElement => {
         },
     }
 
-
     const getRentList = async () => {
-        // @ts-ignore
         const res = await api.rentMap.getRentList()
         const houseList: House[] = res.content
         let _massDataList: AMap.MassMarks.MassData[] = []
@@ -120,8 +116,7 @@ const RentMap: FC = (): ReactElement => {
     return (
         <div className='rent-map'>
             <PriceFilter filterCheckedList={filterCheckedList} setFilterCheckedList={setFilterCheckedList} />
-            <Map
-                mapKey={'f25324e90f4befb66e2bed0ab1f2111a'}>
+            <Map mapKey={'f25324e90f4befb66e2bed0ab1f2111a'} zoom={13}>
                 <MassMarks
                     data={_massDataList}
                     // @ts-ignore
