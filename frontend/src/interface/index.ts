@@ -8,3 +8,6 @@ export interface House {
     address: string;
     location: [number, number];
 }
+
+// TODO 完善
+export type HttpMethod = 'GET' | 'POST'

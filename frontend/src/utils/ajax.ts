@@ -1,7 +1,12 @@
+
+import { HttpMethod } from "src/interface"
+
 // TODO typescript重构
 
-const _ajax = (method, url, data, headers, callback, async = true) => {
+
+const _ajax = (method: HttpMethod, url: string, data: string, header: any, callback: Function, async = true) => {
     let r = new XMLHttpRequest()
+
     r.open(method, url, async)
 
     r.onreadystatechange = () => {
@@ -16,25 +21,22 @@ const _ajax = (method, url, data, headers, callback, async = true) => {
 }
 
 class Ajax {
-
-    get(url, callback) {
-        let method = 'GET'
-        console.log('this.baseUrl', this.baseUrl)
-        console.log('url', url)
+    get(url: string, callback: Function) {
+        let method: HttpMethod = 'GET'
         let headers = {
             'Content-Type': 'application/json',
         }
-        _ajax(method, url, '', headers, (r) => {
+        _ajax(method, url, '', headers, (r: any) => {
             let t = JSON.parse(r)
             callback(t)
         })
     }
 
-    post(url, data, callback) {
+    post(url: string, data: string, callback: Function) {
         let headers = {
             'Content-Type': 'application/json',
         }
-        _ajax('POST', url, data, headers, (r) => {
+        _ajax('POST', url, data, headers, (r: any) => {
             let t = JSON.parse(r)
             callback(t)
         })

@@ -3,12 +3,17 @@ import Ajax from '@u/ajax'
 let baseUrl = 'http://127.0.0.1:4090/'
 let ajax = new Ajax()
 
+// TODO 优化
+interface result {
+    [key: string]: any
+}
+
 // TODO typescript重构
-const createAPI = (name, options) => {
-    const result = {}
+const createAPI = (name: string, options: any) => {
+    const result: result = {}
     for (let key in options) {
         const { method, path } = options[key]
-        result[key] = (params) => {
+        result[key] = (params: any) => {
             return new Promise((resolve, reject) => {
                 let url = baseUrl + path
                 if (method.toLowerCase() === 'get') {
@@ -21,16 +26,15 @@ const createAPI = (name, options) => {
                                 paramsStr += `&${key}=${params[key]}`
                             }
                         })
-
                         url = url + paramsStr
                     }
 
-                    ajax.get(url, (res) => {
+                    ajax.get(url, (res: any) => {
                         resolve(res)
                     })
 
                 } else if (method.toLowerCase() === 'post') {
-                    ajax.post(url, params, (res) => {
+                    ajax.post(url, params, (res: any) => {
                         resolve(res)
                     })
                 }
