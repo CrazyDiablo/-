@@ -1,10 +1,36 @@
 .rent-map {
     width: 100vw;
     height: 100vh;
+    position: relative;
+
+    .price-filter {
+        position: absolute;
+        left: 0;
+        top: 0;
+        z-index: 1000;
+        background: wheat;
+        border-radius: 6px;
+        height: 40px;
+        display: flex;
+        align-items: center;
+        padding-left: 20px;
+
+        .ant-checkbox-group {
+            margin: 0 auto;
+
+            .ant-checkbox+span {
+                display: flex;
+                align-items: center;
+            }
+
+            img {
+                width: 30px;
+                height: 30px;
+            }
+        }
+    }
 
     .rent-map-infoWindow {
-        // width: 350px;
-        // height: 125px;
         display: flex;
 
         img {

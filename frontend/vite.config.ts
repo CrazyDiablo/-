@@ -27,10 +27,6 @@ export default defineConfig({
                 find: '@u',
                 replacement: resolve(__dirname, 'src/utils')
             },
-            {
-                find: '/images',
-                replacement: '/src/assets/images'
-            },
         ]
     }
 

@@ -1,14 +1,14 @@
 import { FC, ReactElement, useEffect, useState } from 'react'
 import { Map, MassMarks, InfoWindow } from '@pansy/react-amap'
-import { MapProps, } from '@pansy/react-amap/es/map'
 import { MassMarksProps } from '@pansy/react-amap/es/mass-marks'
 import { getIconUrl } from '@u/util'
-
 import api from '@s/index'
 import './style.less'
 import { House } from '../../interface/index';
 import { InfoWindowProps } from '@pansy/react-amap/es/info-window'
+import PriceFilter from './PriceFilter'
 
+// 点标记样式
 const style = [
     {
         url: getIconUrl('marker-gray.svg'),
@@ -42,14 +42,15 @@ const style = [
     },
 ]
 
-const RentMap: FC = (): ReactElement => {
 
+const RentMap: FC = (): ReactElement => {
     const [massDataList, setmMssDataList] = useState<AMap.MassMarks.MassData[]>([])
     const [position, setPosition] = useState<AMap.ExpandPosition>({ longitude: 0, latitude: 0 })
     const [infoWindowVisible, setInfoWindowVisible] = useState<boolean>(false)
     const [clickMassData, setClickMassData] = useState<AMap.MassMarks.MassData>({ name: '', lnglat: [0, 0] })
+    const [filterCheckedList, setFilterCheckedList] = useState<number[]>([1000, 2000, 3000, 4000, 5000])
 
-    const html = `
+    const infoWindowHtml = `
     <div class='rent-map-infoWindow'>
         <img src="https://pic1.ajkimg.com/display/anjuke/97ffba407dbe4d5b681edc31c2ba0b76/240x180c.jpg?t=1&srotate=1" alt="" />
         <div class='info'>
@@ -63,7 +64,7 @@ const RentMap: FC = (): ReactElement => {
         </div>
     </div>
 `
-
+    // 点标记事件
     const markEvents: MassMarksProps['events'] = {
         click: (e) => {
             console.log('点击了', e)
@@ -74,6 +75,7 @@ const RentMap: FC = (): ReactElement => {
         }
     }
 
+    // 信息弹窗事件
     const infoWindowEvents: InfoWindowProps['events'] = {
         open: (e) => {
             console.log('infoWindowEvents', e)
@@ -86,6 +88,7 @@ const RentMap: FC = (): ReactElement => {
 
 
     const getRentList = async () => {
+        // @ts-ignore
         const res = await api.rentMap.getRentList()
         const houseList: House[] = res.content
         let _massDataList: AMap.MassMarks.MassData[] = []
@@ -93,7 +96,6 @@ const RentMap: FC = (): ReactElement => {
             const price = house.price
             let styleIndex = Math.floor(price / 1000)
             styleIndex = styleIndex > 4 ? 4 : styleIndex
-            price === 3600 && console.log('styleIndex', styleIndex)
             const massData: AMap.MassMarks.MassData = {
                 lnglat: house.location,
                 name: house.title,
@@ -109,21 +111,28 @@ const RentMap: FC = (): ReactElement => {
         getRentList()
     }, [])
 
+    const _massDataList = massDataList.filter(massData => {
+        let priceLevel = Math.floor((massData.price + 1000) / 1000) * 1000
+        priceLevel = priceLevel > 5000 ? 5000 : priceLevel
+        return filterCheckedList.includes(priceLevel)
+    })
+
     return (
         <div className='rent-map'>
+            <PriceFilter filterCheckedList={filterCheckedList} setFilterCheckedList={setFilterCheckedList} />
             <Map
-                // events={mapEvents}
                 mapKey={'f25324e90f4befb66e2bed0ab1f2111a'}>
                 <MassMarks
-                    data={massDataList}
+                    data={_massDataList}
+                    // @ts-ignore
                     style={style}
                     events={markEvents} />
                 <InfoWindow
                     position={position}
                     visible={infoWindowVisible}
-                    // isCustom={true}
+                    closeWhenClickMap
                     isCustom={false}
-                    content={html}
+                    content={infoWindowHtml}
                     offset={[0, -20]}
                     autoMove={false}
                     events={infoWindowEvents}
